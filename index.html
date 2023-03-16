@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Крестики-нолики</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <form name="players">
+    <input type="text" class="playername" name="player1" placeholder="Крестики">
+    <label for="player2">против</label>
+    <input type="text" class="playername" name="player2" placeholder="Нолики">
+    <button type="submit" name="submitBtn">Начать игру!</button>
+  </form>
+  <div class="player-steps"></div>
+  <div class="field">
+    <div class="cell cell-1" data-value="1"></div>
+    <div class="cell cell-2" data-value="2"></div>
+    <div class="cell cell-3" data-value="3"></div>
+    <div class="cell cell-4" data-value="4"></div>
+    <div class="cell cell-5" data-value="5"></div>
+    <div class="cell cell-6" data-value="6"></div>
+    <div class="cell cell-7" data-value="7"></div>
+    <div class="cell cell-8" data-value="8"></div>
+    <div class="cell cell-9" data-value="9"></div>
+  </div>
+
+  <div class="stats">
+    <p class="stats__title">Прошлые результаты</p>
+    <ul class="stats__results"></ul>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+
+</html>
