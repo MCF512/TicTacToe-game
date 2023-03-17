@@ -131,13 +131,13 @@ table {
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  color: rgb(24, 163, 163);
 }
 
 .field {
   margin: 0 auto;
   width: 300px;
   height: 300px;
-  /* border: 1px solid rgb(24, 163, 163); */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -246,4 +246,93 @@ button[type='submit']:hover {
   margin-bottom: 50px;
   font-weight: bold;
   font-size: 20px;
+}
+
+.container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.wrapper {
+  position: absolute;
+  top: 50px;
+}
+
+.timer {
+  font-size: 50px;
+  color: rgb(24, 163, 163);
+  border: 1px solid rgb(24, 163, 163);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.stats {
+  border: 1px solid rgb(24, 163, 163);
+  padding: 5px 0 5px 0;
+  width: 300px;
+  height: 492px;
+  overflow-y: scroll;
+  border-radius: 10px;
+}
+
+.stats::-webkit-scrollbar {
+  width: 5px;
+}
+
+.stats::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.stats::-webkit-scrollbar-thumb {
+  background-color: rgb(24, 163, 163);
+  border: 2px solid transparent;
+  border-radius: 10px;
+}
+
+.stats__title {
+  font-size: 20px;
+  font-weight: bold;
+  /* border-bottom: 1px solid rgb(24, 163, 163); */
+  text-align: center;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stats__item {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgb(24, 163, 163);
+  padding: 10px
+}
+
+.stats__players {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.empty {
+  font-size: 20px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.stats__clear {
+  background-color: rgb(24, 163, 163);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.stats__clear path {
+  fill: #fff;
 }

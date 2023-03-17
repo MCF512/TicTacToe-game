@@ -3,7 +3,9 @@ let field = document.querySelector('.field');
 let namesForm = document.forms.players;
 let namesInputs = document.querySelectorAll('.playername');
 let playerToStep = document.querySelector('.player-steps');
-
+let timer = document.querySelector('.timer');
+let statsList = document.querySelector('.stats__results');
+let clearStats = document.querySelector('.stats__clear');
 let stepCount = 1;
 let cross = [];
 let zero = [];
@@ -18,9 +20,11 @@ let winConditions = [
   [3, 5, 7]
 ];
 let gameResult = '';
+let gameTime = '';
 let gameStarted = false;
-let results;
-
+let results = [];
+let seconds = 0;
+showStats()
 namesForm.addEventListener('submit', (e) => {
   e.preventDefault();
   if (!namesForm.player1.value) {
@@ -34,10 +38,12 @@ namesForm.addEventListener('submit', (e) => {
   if (namesForm.player1.value && namesForm.player2.value && !gameStarted) {
     field.addEventListener('click', handleClick);
     gameStarted = true;
+    timerInner()
   }
   if (gameStarted) {
-    namesForm.submitBtn.innerHTML = 'Перезапустить'
+    namesForm.submitBtn.innerHTML = 'Игра началась!'
     namesForm.submitBtn.addEventListener('click', reloadGame)
+    namesForm.submitBtn.setAttribute('disabled', '');
     whoSteps(stepCount)
   }
 });
@@ -48,6 +54,12 @@ namesInputs.forEach(input => {
       input.style.borderColor = 'rgb(24, 163, 163)'
     }
   })
+});
+
+clearStats.addEventListener('click', () => {
+  localStorage.clear();
+  results = [];
+  showStats()
 })
 
 function handleClick(e) {
@@ -76,22 +88,28 @@ function handleClick(e) {
       if (crossWin) {
         field.removeEventListener('click', handleClick);
         gameResult = `Победил(а) ${namesForm.player1.value}`
-        namesForm.submitBtn.innerHTML = 'Сыграть еще';
+        namesForm.submitBtn.removeAttribute('disabled', '')
+        namesForm.submitBtn.innerHTML = 'Сыграть еще?';
         gameStarted = false;
-        console.log(gameResult);
+        timerInner()
+        whoWins()
         return
       } else if (zeroWin) {
         field.removeEventListener('click', handleClick);
         gameResult = `Победил(а) ${namesForm.player2.value}`;
-        namesForm.submitBtn.innerHTML = 'Сыграть еще';
+        namesForm.submitBtn.removeAttribute('disabled', '')
+        namesForm.submitBtn.innerHTML = 'Сыграть еще?';
         gameStarted = false;
-        console.log(gameResult);
+        timerInner()
+        whoWins()
         return
       } else if ((i == winConditions.length - 1) && stepCount == 10 && !crossWin && !zeroWin) {
         gameResult = 'Ничья';
-        namesForm.submitBtn.innerHTML = 'Сыграть еще';
+        namesForm.submitBtn.removeAttribute('disabled', '')
+        namesForm.submitBtn.innerHTML = 'Сыграть еще?';
         gameStarted = false;
-        console.log(gameResult)
+        timerInner()
+        whoWins()
         return
       }
     }
@@ -107,21 +125,67 @@ function reloadGame() {
   stepCount = 1;
   cross = [];
   zero = [];
+  gameStarted = false;
 }
 
 function whoSteps(count) {
-  if (count % 2 == 0) {
+  if (count % 2 == 0 && gameStarted) {
     playerToStep.innerHTML = `Ходит ${namesForm.player2.value}`
-  } else {
+  } else if (count % 2 != 0 && gameStarted) {
     playerToStep.innerHTML = `Ходит ${namesForm.player1.value}`
   }
 }
 
-function stats() {
-  let player1 = namesForm.player1.value;
-  let player2 = namesForm.player2.value;
+function whoWins() {
+  if (!gameStarted && gameResult != null) {
+    playerToStep.innerHTML = gameResult;
+    let resultItem = {
+      players: `${namesForm.player1.value} vs ${namesForm.player2.value}`,
+      whoWins: gameResult,
+      time: gameTime,
+    };
 
+    stats(resultItem);
+  }
+}
+
+function stats(resultItem) {
   if (localStorage.results == null) {
-    localStorage.setItem('results', JSON.stringify([results]))
+    results.push(resultItem);
+    localStorage.setItem('results', JSON.stringify(results))
+    showStats()
+  } else {
+    results = JSON.parse(localStorage.getItem('results'));
+    results.push(resultItem);
+    localStorage.setItem('results', JSON.stringify(results));
+    showStats()
+  }
+}
+
+function timerInner() {
+  seconds++;
+  timer.innerHTML = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+  if (gameStarted) {
+    setTimeout(timerInner, 1000)
+  } else if (!gameStarted && gameResult != null) {
+    gameTime = timer.innerHTML;
+    timer.innerHTML = '00:00';
+    seconds = 0;
+  }
+}
+
+function showStats() {
+  if (localStorage.results != null) {
+    results = JSON.parse(localStorage.getItem('results'));
+    statsList.innerHTML = ''
+    for (let result of results) {
+      console.log(result)
+      statsList.innerHTML += `<li class="stats__item">
+      <p class="stats__players">${result.players}</p>
+      <p class="stats__winner">${result.whoWins} | ${result.time}</p>
+      </li>`
+    }
+  } else {
+    statsList.innerHTML = '<p class="empty">Тут будут ваши результаты</p>'
   }
 }
